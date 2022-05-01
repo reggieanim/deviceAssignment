@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
+import uploadFile from '@functions/uploadFile';
 
 const serverlessConfiguration: AWS = {
   service: 'deviceassignment',
@@ -19,7 +20,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { hello, uploadFile },
   package: { individually: true },
   custom: {
     esbuild: {
