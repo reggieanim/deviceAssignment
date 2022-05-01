@@ -11,13 +11,16 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
   const depContainer: AwilixContainer<any> = createDepContainer()
   const getSignedUrl: (method: UrlMethod, payload: UrlBody) => Promise<string> = depContainer.resolve('createPresignedUrl')
   const body: UrlBody = {
-    Key: "reggie.json"
+    Key: event.body.filename,
+    Metadata: {
+      filename: event.body.filename,
+      notification: event.body.notification
+    }
   }
   const signedUrl: string = await getSignedUrl(UrlMethod.put, body)
 
   return formatJSONResponse({
-    message: signedUrl,
-    event,
+    url: signedUrl,
   });
 };
 

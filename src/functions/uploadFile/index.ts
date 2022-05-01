@@ -7,7 +7,7 @@ export default {
     {
       http: {
         method: 'post',
-        path: 'uploadFile',
+        path: '/v1/devices',
         request: {
           schemas: {
             'application/json': schema,

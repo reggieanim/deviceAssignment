@@ -6,7 +6,7 @@ import uploadFile from '@functions/uploadFile';
 const serverlessConfiguration: AWS = {
   service: 'deviceassignment',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dotenv-plugin'],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dotenv-plugin', 'serverless-s3-local'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',

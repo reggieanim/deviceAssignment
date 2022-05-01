@@ -5,7 +5,7 @@ export const createS3Client = ({
     config: {
         s3: {
             auth: {
-                endpoint,
+                // endpoint,
                 accessKeyId,
                 secretAccessKey
             },
@@ -14,7 +14,7 @@ export const createS3Client = ({
         }
     }
 }: { config: Config }) => new S3({
-    endpoint,
+    signatureVersion: 'v4',
     accessKeyId,
     secretAccessKey,
     s3ForcePathStyle,
