@@ -13,7 +13,7 @@ export const createDynamoDocumentClient = ({
       auth: { endpoint, accessKeyId, secretAccessKey, region },
     },
   },
-}: { config: Config }) =>
+}: { config: Config }): DynamoDB.DocumentClient =>
   new DynamoDB.DocumentClient({
     endpoint,
     accessKeyId,
