@@ -11,7 +11,7 @@ export const createS3Client = ({
             s3ForcePathStyle,
         }
     }
-}: { config: Config }) => new S3({
+}: { config: Config }): S3 => new S3({
     accessKeyId,
     secretAccessKey,
     s3ForcePathStyle,

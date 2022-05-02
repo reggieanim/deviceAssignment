@@ -22,6 +22,23 @@ const serverlessConfiguration: AWS = {
   },
   resources: {
     Resources: {
+      uploadProgressNotificationTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties:
+        {
+          DisplayName: "The notification topic for upload progress",
+          TopicName: 'sendPEmail'
+        }
+      },
+      emailToSNSUploadProgressNotificationTopicSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties:
+        {
+          Endpoint: "animreggie@gmail.com",
+          Protocol: "email",
+          TopicArn: { Ref: "uploadProgressNotificationTopic" }
+        }
+      },
       TestBucket: {
         Type: 'AWS::S3::Bucket',
         DependsOn: ['TestQueue', 'QueuePolicy'],
@@ -40,16 +57,26 @@ const serverlessConfiguration: AWS = {
             {
               AttributeName: "deviceId",
               AttributeType: "S",
-              KeyType: "HASH"
+            },
+            {
+              AttributeName: "deviceName",
+              AttributeType: "S",
             }
           ],
           KeySchema: [
             {
+              AttributeName: "deviceId",
+              KeyType: "HASH",
+            },
+            {
               AttributeName: "deviceName",
-              AttributeType: "S",
               KeyType: "RANGE",
             }
-          ]
+          ],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 10,
+            WriteCapacityUnits: 10
+          }
         }
       },
       QueuePolicy: {

@@ -1,10 +1,8 @@
 import { type DynamoDB } from "aws-sdk"
 
-
-
 const createPutAction = ({
     dynamoDocumentClient
-}: { dynamoDocumentClient: DynamoDB.DocumentClient }) => async (tableName: string, data) => {
+}: { dynamoDocumentClient: DynamoDB.DocumentClient }) => async (tableName: string, data: any) => {
     await dynamoDocumentClient
         .put({
             ReturnConsumedCapacity: 'TOTAL',
@@ -17,4 +15,4 @@ const createPutAction = ({
 
 export const createAWSStorageClient = ({
     dynamoDocumentClient
-}) => ({ put: createPutAction({ dynamoDocumentClient }) })
+}: {dynamoDocumentClient:DynamoDB.DocumentClient}) => ({ put: createPutAction({ dynamoDocumentClient }) })

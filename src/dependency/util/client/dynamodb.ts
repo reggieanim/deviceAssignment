@@ -10,12 +10,11 @@ export const createDynamoClient = ({
 export const createDynamoDocumentClient = ({
   config: {
     dynamodb: {
-      auth: { endpoint, accessKeyId, secretAccessKey, region },
+      auth: { accessKeyId, secretAccessKey, region },
     },
   },
 }: { config: Config }): DynamoDB.DocumentClient =>
   new DynamoDB.DocumentClient({
-    endpoint,
     accessKeyId,
     secretAccessKey,
     region,

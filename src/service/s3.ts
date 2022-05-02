@@ -36,7 +36,8 @@ export const createPresignedUrl = ({ s3Client, config }: { s3Client: S3, config:
     Bucket: path(['s3', 'bucket'], config),
     Key: `${filename}_${id}.json`, //filename
     Expires: defaultTo(100)(prop('Expires', payload)),
-    ContentType: 'application/json'
+    ContentType: 'application/json',
+    Metadata: payload.Metadata
   })
 
   return presignedURL
