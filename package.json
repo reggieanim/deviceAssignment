@@ -23,7 +23,8 @@
     "@middy/http-json-body-parser": "^2.5.3",
     "awilix": "^7.0.2",
     "debug": "^4.3.4",
-    "rambda": "^7.0.3"
+    "rambda": "^7.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",

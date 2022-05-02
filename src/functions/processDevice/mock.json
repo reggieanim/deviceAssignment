@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"Records\":[{\"eventVersion\":\"2.1\",\"eventSource\":\"aws:s3\",\"awsRegion\":\"us-east-1\",\"eventTime\":\"2022-05-01T23:05:30.125Z\",\"eventName\":\"ObjectCreated:Put\",\"userIdentity\":{\"principalId\":\"A2APL7DBFHD8S7\"},\"requestParameters\":{\"sourceIPAddress\":\"197.251.150.83\"},\"responseElements\":{\"x-amz-request-id\":\"WMGD2JDV5TMZZCMH\",\"x-amz-id-2\":\"YNrWLX2bi9mCaGcXSoMnRLPjH/JSmuQhO67Vf1jtwp9f+bpZOYa2hSn6g4gA8WiwPJlqwEXgCZcAv78dVqazRN1sH/0UX/Cf\"},\"s3\":{\"s3SchemaVersion\":\"1.0\",\"configurationId\":\"574cee32-392a-4fe3-82a7-90f16f967dd0\",\"bucket\":{\"name\":\"device-data-assignmentv477\",\"ownerIdentity\":{\"principalId\":\"A2APL7DBFHD8S7\"},\"arn\":\"arn:aws:s3:::device-data-assignmentv477\"},\"object\":{\"key\":\"import_devices.json\",\"size\":287170,\"eTag\":\"d1ee34ee9d469674ca96ffa22661a1e3\",\"sequencer\":\"00626F123A11616EAF\"}}}]}"
+}

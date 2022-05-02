@@ -7,7 +7,7 @@ import { middyfy } from '@libs/lambda';
 
 import schema from './schema';
 
-const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const uploadFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   const depContainer: AwilixContainer<any> = createDepContainer()
   const getSignedUrl: (method: UrlMethod, payload: UrlBody) => Promise<string> = depContainer.resolve('createPresignedUrl')
   const body: UrlBody = {
@@ -24,4 +24,4 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
   });
 };
 
-export const main = middyfy(hello);
+export const main = middyfy(uploadFile);

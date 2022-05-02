@@ -1,7 +1,7 @@
 export default {
   type: "object",
   properties: {
-    email: { type: 'string' },
+    notification: { type: 'string' },
     filename: { type: 'string' }
   },
   required: ['email', 'filename']

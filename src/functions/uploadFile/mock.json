@@ -2,5 +2,5 @@
   "headers": {
     "Content-Type": "application/json"
   },
-  "body": "{\"email\": \"re@gmail.com\", \"filename\": \"102startertaskset.json\", \"notification\": \"anim@gmail.com\"}"
+  "body": "{\"email\": \"re@gmail.com\", \"filename\": \"import_devices.json\", \"notification\": \"anim@gmail.com\"}"
 }
