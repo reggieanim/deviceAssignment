@@ -22,9 +22,7 @@ test.beforeEach(async t => {
     }
     t.context.createSendEmail = () => Promise.resolve()
     t.context.payload = {
-        body: {
-            Records: [{ s3: { object: { key: '123' } } }]
-        }
+        Records: [{ s3: { object: { key: '123' } } }]
     }
 })
 
@@ -32,7 +30,7 @@ test('Check uploadToDynamo', async t => {
     t.truthy(uploadToDynamo)
     const { getFromS3, config, createAWSStorageClient, createSendEmail, payload } = t.context
     const upload = uploadToDynamo({ getFromS3, config, createAWSStorageClient, createSendEmail })
-    await upload(payload)
+    await upload(JSON.stringify(payload))
     t.pass()
 })
 

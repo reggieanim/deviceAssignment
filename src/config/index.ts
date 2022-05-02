@@ -36,6 +36,7 @@ export interface Config {
   sns: SnsConfig;
 }
 
+// App configuration
 export const config: Config = {
   env: process.env.ENV,
   endpoint: process.env.ENDPOINT,

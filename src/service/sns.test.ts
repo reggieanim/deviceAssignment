@@ -1,17 +1,17 @@
-import anyTest, {TestFn} from 'ava'
+import anyTest, { TestFn } from 'ava'
 import {
-    createSendEmail,
+  createSendEmail,
 } from './sns'
 const test = anyTest as TestFn<{ snsClient: any, params }>;
 
 test.beforeEach(async t => {
-    t.context.params = {
-        Message: "Hello test",
-        Subject: "Testing send email",
-        TopicArn: 'aws.comelld::arn:sns'
-    }
+  t.context.params = {
+    Message: "Hello test",
+    Subject: "Testing send email",
+    TopicArn: 'aws.comelld::arn:sns'
+  }
   t.context.snsClient = {
-    publish: (params) => Promise.resolve({params})
+    publish: (params) => ({ promise: () => Promise.resolve({ params }) })
   }
 })
 
