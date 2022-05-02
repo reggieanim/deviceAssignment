@@ -13,3 +13,5 @@ jspm_packages
 tmp
 
 .nyc_output
+
+coverage
