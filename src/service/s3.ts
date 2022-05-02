@@ -1,6 +1,6 @@
-import { type S3, type AWSError } from 'aws-sdk'
+import { type S3 } from 'aws-sdk'
 import { v4 as uuidv4 } from 'uuid'
-import { always, cond, defaultTo, identity, when, prop, path } from 'rambda'
+import { defaultTo, prop, path } from 'rambda'
 import { type Config } from '../config'
 import createLogger from '../dependency/util/logger'
 
@@ -8,7 +8,7 @@ export type UrlBody = {
   Bucket?: string;
   Key: string;
   Expires?: number;
-  Metadata: Metadata;
+  Metadata?: Metadata;
 }
 
 type Metadata = {
@@ -22,15 +22,14 @@ export enum UrlMethod {
 }
 
 
-export const createGetFromS3 = ({ s3Client, config }: { s3Client: S3, config: Config }) => async (key: string): Promise<S3.GetObjectOutput>=> {
-  console.log(config)
+export const createGetFromS3 = ({ s3Client, config }: { s3Client: S3, config: Config }) => async (key: string): Promise<S3.GetObjectOutput> => {
   const { s3: { bucket: Bucket } } = config
   const log = createLogger('S3:get')
   log('Getting item from s3 using', key)
   return s3Client.getObject({ Bucket, Key: key }).promise()
 }
 
-export const createPresignedUrl = ({ s3Client, config }: { s3Client: S3, config: Config }) => async (method: UrlMethod , payload: UrlBody): Promise<string> => {
+export const createPresignedUrl = ({ s3Client, config }: { s3Client: S3, config: Config }) => async (method: UrlMethod, payload: UrlBody): Promise<string> => {
   const filename = prop('Key', payload)
   const id: string = uuidv4()
   const presignedURL: string = await s3Client.getSignedUrl(method, {

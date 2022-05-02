@@ -6,8 +6,8 @@ export default {
   events: [
     {
       http: {
-        method: 'post',
-        path: 'hello',
+        method: 'get',
+        path: 'healthCheck',
         request: {
           schemas: {
             'application/json': schema,

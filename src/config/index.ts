@@ -22,6 +22,7 @@ export interface Config {
   env: string;
   endpoint: string;
   apiKey: string;
+  version: string;
   dynamodb: DynamoConfig;
   s3: S3Config;
 }
@@ -30,6 +31,7 @@ export const config: Config = {
   env: process.env.ENV,
   endpoint: process.env.ENDPOINT,
   apiKey: process.env.API_KEY,
+  version: process.env.VERSION,
   dynamodb: {
     seedingEnabled: equals('true', process.env.DYNAMODB_SEEDING_ENABLED),
     auth: {

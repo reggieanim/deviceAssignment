@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+import healthCheck from '@functions/healthCheck';
 import uploadFile from '@functions/uploadFile';
 import processDevice from '@functions/processDevice';
 
@@ -30,6 +30,26 @@ const serverlessConfiguration: AWS = {
           NotificationConfiguration: {
             QueueConfigurations: [{ Event: 's3:ObjectCreated:*', Queue: { "Fn::GetAtt": ['TestQueue', 'Arn'] } }]
           }
+        }
+      },
+      devicesTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: {
+          TableName: "devicesTable277",
+          AttributeDefinitions: [
+            {
+              AttributeName: "deviceId",
+              AttributeType: "S",
+              KeyType: "HASH"
+            }
+          ],
+          KeySchema: [
+            {
+              AttributeName: "deviceName",
+              AttributeType: "S",
+              KeyType: "RANGE",
+            }
+          ]
         }
       },
       QueuePolicy: {
@@ -72,7 +92,7 @@ const serverlessConfiguration: AWS = {
     }
   },
   // import the function via paths
-  functions: { hello, uploadFile, processDevice },
+  functions: { healthCheck, uploadFile, processDevice },
   package: { individually: true },
   custom: {
     esbuild: {
