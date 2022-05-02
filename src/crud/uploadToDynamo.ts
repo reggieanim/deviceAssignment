@@ -44,9 +44,6 @@ export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: 
       TopicArn: topicArn
     }
     await createSendEmail(params)
-    console.log('done successfully')
-    console.log(completed)
-    console.log(failed)
     return
   } catch (e) {
     console.error(e)
