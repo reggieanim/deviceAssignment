@@ -1,18 +1,52 @@
 import { compose, head, path, prop } from 'rambda'
+import { map as mapAwait } from 'awaiting'
+import { type Config } from '../config'
 import createLogger from '../dependency/util/logger'
 
+let completed: any[] = []
+let failed: any[] = []
 const getS3Payload = (data): unknown => compose(prop('s3'), head, path(['body', 'Records']))(data)
 const getS3Key = (data): unknown => compose(path(['object', 'key']))(data)
 
-export default ({ getFromS3 }) => async input => {
+interface Client {
+  put: (tableName: string, data: any) => {}
+}
+export const generateMessage = ({ failed, passed, time }: { failed: number, passed: number, time: string }): string => {
+  const totalRecords: number = failed + passed
+  return `---------------- SUMMARY --------------------\nExecution completed at ${time}\nTotal number of records processed: ${totalRecords}\nAccepted: ${passed}\nRejected: ${failed}\n\n\n--------------------------------------------------------`
+}
+const createPutDeviceToDynamo = ({ client, tableName }: { client: Client, tableName: string }) => async (data: any) => {
+  try {
+    await client.put(tableName, data)
+    completed.push(data)
+  }
+  catch (err) {
+    console.log(err)
+    failed.push(data)
+  }
+}
+
+export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: { getFromS3: (key: string) => any, createAWSStorageClient: Client, config: Config, createSendEmail: (params) => {} }) => async input => {
   const log = createLogger('uploadToDynamo')
-  const key = compose(getS3Key, getS3Payload)(input)
+  const key = String(compose(getS3Key, getS3Payload)(input))
+  const dynamoTableName: string = config?.dynamodb?.table
   log('Running pipeline')
   try {
     const response = await getFromS3(key)
     const rawData = response.Body.toString('utf-8')
-    const payload = JSON.parse(rawData)
-    console.log(payload)
+    const data = JSON.parse(rawData)
+    const payload = data.splice(1, 5)
+    const topicArn: string = config?.sns?.topicArn
+    const storageClient: Client = createAWSStorageClient
+    const date: string = new Date().toUTCString()
+    const putDeviceToDynamo = createPutDeviceToDynamo({ client: storageClient, tableName: dynamoTableName })
+    await mapAwait(payload, payload.length, putDeviceToDynamo)
+    const params = {
+      Message: generateMessage({ failed: failed.length, passed: completed.length, time: date }),
+      Subject: "Devices upload successfully",
+      TopicArn: topicArn
+    }
+    await createSendEmail(params)
     return
   } catch (e) {
     console.error(e)
