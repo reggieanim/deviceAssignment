@@ -4,7 +4,8 @@
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text ava"
+    "test": "nyc --reporter=html --reporter=text ava",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=14.15.0"
@@ -39,7 +40,7 @@
     "@types/node": "^14.14.25",
     "ava": "^4.2.0",
     "esbuild": "^0.14.11",
-    "husky": "^7.0.4",
+    "husky": "^7.0.0",
     "json-schema-to-ts": "^1.5.0",
     "nyc": "^15.1.0",
     "serverless": "^3.0.0",
