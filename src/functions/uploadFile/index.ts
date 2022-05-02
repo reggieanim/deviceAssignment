@@ -8,6 +8,7 @@ export default {
       http: {
         method: 'post',
         path: '/v1/devices',
+        private: true,
         request: {
           schemas: {
             'application/json': schema,

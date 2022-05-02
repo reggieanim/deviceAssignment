@@ -4,5 +4,5 @@ export default {
     notification: { type: 'string' },
     filename: { type: 'string' }
   },
-  required: ['email', 'filename']
+  required: ['notification', 'filename']
 } as const;

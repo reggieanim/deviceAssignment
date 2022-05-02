@@ -7,7 +7,7 @@ import processDevice from '@functions/processDevice';
 const serverlessConfiguration: AWS = {
   service: 'deviceassignment',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dotenv-plugin', 'serverless-s3-local'],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dotenv-plugin', 'serverless-s3-local', 'serverless-add-api-key'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -122,6 +122,14 @@ const serverlessConfiguration: AWS = {
   functions: { healthCheck, uploadFile, processDevice },
   package: { individually: true },
   custom: {
+    apiKeys: [
+      {
+        "name": "name1"
+      },
+      {
+        "name": "name2"
+      }
+    ],
     esbuild: {
       bundle: true,
       minify: false,

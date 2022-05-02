@@ -1,12 +1,9 @@
-import { compose, head, path, prop } from 'rambda'
 import { map as mapAwait } from 'awaiting'
 import { type Config } from '../config'
 import createLogger from '../dependency/util/logger'
 
 let completed: any[] = []
 let failed: any[] = []
-const getS3Payload = (data): unknown => compose(prop('s3'), head, path(['body', 'Records']))(data)
-const getS3Key = (data): unknown => compose(path(['object', 'key']))(data)
 
 interface Client {
   put: (tableName: string, data: any) => {}
@@ -28,14 +25,14 @@ const createPutDeviceToDynamo = ({ client, tableName }: { client: Client, tableN
 
 export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: { getFromS3: (key: string) => any, createAWSStorageClient: Client, config: Config, createSendEmail: (params) => {} }) => async input => {
   const log = createLogger('uploadToDynamo')
-  const key = String(compose(getS3Key, getS3Payload)(input))
+  const data = JSON.parse(input)
+  const key = data?.Records[0]?.s3?.object?.key
   const dynamoTableName: string = config?.dynamodb?.table
   log('Running pipeline')
   try {
     const response = await getFromS3(key)
-    const rawData = response.Body.toString('utf-8')
-    const data = JSON.parse(rawData)
-    const payload = data.splice(1, 5)
+    const data = response.Body.toString('utf-8')
+    const payload = JSON.parse(data)
     const topicArn: string = config?.sns?.topicArn
     const storageClient: Client = createAWSStorageClient
     const date: string = new Date().toUTCString()
@@ -47,6 +44,9 @@ export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: 
       TopicArn: topicArn
     }
     await createSendEmail(params)
+    console.log('done successfully')
+    console.log(completed)
+    console.log(failed)
     return
   } catch (e) {
     console.error(e)
