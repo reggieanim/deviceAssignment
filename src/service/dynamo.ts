@@ -7,7 +7,14 @@ const createPutAction = ({
         .put({
             ReturnConsumedCapacity: 'TOTAL',
             TableName: tableName,
-            Item: data
+            Item: data,
+            ConditionExpression: "#deviceId <> :deviceId",
+            ExpressionAttributeNames: {
+                "#deviceId": "deviceId",
+            },
+            ExpressionAttributeValues: {
+                ":deviceId": data.deviceId,
+            },
         })
         .promise()
     return data
