@@ -1,9 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
-import { type SNS } from 'aws-sdk'
 import { formatJSONResponse, formatErrorResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 import { type AwilixContainer } from 'awilix'
-import { type Config } from '../../config'
 import { type UrlBody, UrlMethod } from '../../service/s3'
 import createDepContainer from '../../dependency'
 
@@ -13,8 +11,6 @@ const uploadFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
   try {
     const depContainer: AwilixContainer<any> = createDepContainer()
     const getSignedUrl: (method: UrlMethod, payload: UrlBody) => Promise<string> = depContainer.resolve('createPresignedUrl')
-    const createSubscriber: (params: SNS.Types.SubscribeInput) => Promise<SNS.SubscribeResponse> = depContainer.resolve('createSubscriber')
-    const config: Config = depContainer.resolve('config')
     const body: UrlBody = {
       Key: event.body.filename,
       Metadata: {
@@ -23,12 +19,6 @@ const uploadFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
       }
     }
     const signedUrl: string = await getSignedUrl(UrlMethod.put, body)
-    const params: SNS.Types.SubscribeInput = {
-      Protocol: 'email',
-      TopicArn: config.sns.topicArn,
-      Endpoint: event.body.notification
-    }
-    await createSubscriber(params)
     return formatJSONResponse({
       url: signedUrl,
     });

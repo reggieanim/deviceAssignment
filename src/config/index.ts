@@ -25,6 +25,9 @@ type S3Config = {
   auth: AWSPARAMS
 }
 
+type SesConfig = {
+  auth: AWSPARAMS
+}
 export interface Config {
   env: string;
   endpoint: string;
@@ -34,6 +37,7 @@ export interface Config {
   dynamodb: DynamoConfig;
   s3: S3Config;
   sns: SnsConfig;
+  ses: SesConfig;
 }
 
 // App configuration
@@ -73,4 +77,12 @@ export const config: Config = {
     topic: process.env.SNS_TOPIC,
     topicArn: process.env.SNS_TOPIC_ARN
   },
+  ses: {
+    auth: {
+      endpoint: process.env.SNS_AUTH_ENDPOINT,
+      accessKeyId: process.env.SES_AUTH_ACCESS_KEY_ID,
+      secretAccessKey: process.env.SES_AUTH_SECRET_ACCESS_KEY,
+      region: process.env.SES_AUTH_REGION
+    }
+  }
 }

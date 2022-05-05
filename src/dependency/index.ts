@@ -8,11 +8,13 @@ import { config, type Config } from '../config'
 import { createDynamoClient, createDynamoDocumentClient } from './util/client/dynamodb'
 import { createS3Client } from './util/client/s3'
 import { createSNSClient } from './util/client/sns'
+import { createSESClient } from './util/client/ses'
 
 // services
 import { createPresignedUrl, createGetFromS3 } from 'src/service/s3'
 import { createSendEmail, createSubscriber } from 'src/service/sns'
 import { createAWSStorageClient } from 'src/service/dynamo'
+import { createSendEmail as sesSendEmail } from 'src/service/ses'
 
 // crud
 import uploadToDynamo from '../crud/uploadToDynamo'
@@ -31,11 +33,13 @@ container.register('dynamoClient', asFunction(createDynamoClient).scoped())
 container.register('dynamoDocumentClient', asFunction(createDynamoDocumentClient).scoped())
 container.register('s3Client', asFunction(createS3Client).scoped())
 container.register('snsClient', asFunction(createSNSClient).scoped())
+container.register('sesClient', asFunction(createSESClient).scoped())
 container.register('getFromS3', asFunction(createGetFromS3).scoped())
 container.register('createPresignedUrl', asFunction(createPresignedUrl).scoped())
 container.register('uploadToDynamo', asFunction(uploadToDynamo).scoped())
 container.register('createAWSStorageClient', asFunction(createAWSStorageClient).scoped())
 container.register('createSendEmail', asFunction(createSendEmail).scoped())
+container.register('createSendSesEmail', asFunction(sesSendEmail).scoped())
 container.register('createSubscriber', asFunction(createSubscriber).scoped())
 
 export default (): AwilixContainer<any> => container
