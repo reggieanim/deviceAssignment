@@ -37,6 +37,6 @@ test('Check uploadToDynamo', async t => {
 
 test('Check generate message', async t => {
     t.truthy(generateMessage)
-    const message = generateMessage({ failed: 100, passed: 800, time: '21st December' })
+    const message = generateMessage({ failed: 100, passed: 800, time: '21st December', total:900 })
     t.is(message, '---------------- SUMMARY --------------------\nExecution completed at 21st December\nTotal number of records processed: 900\nAccepted: 800\nRejected: 100\n\n\n--------------------------------------------------------')
 })
