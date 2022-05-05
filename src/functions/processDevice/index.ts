@@ -6,9 +6,10 @@ export default {
   events: [
     {
       sqs: {
-       arn: {
-         "Fn::GetAtt": ['TestQueue', 'Arn']
-       }
+        batchSize: 1,
+        arn: {
+          "Fn::GetAtt": ['TestQueue', 'Arn']
+        }
       },
     },
   ],

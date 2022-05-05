@@ -2,25 +2,32 @@ import { map as mapAwait } from 'awaiting'
 import { type Config } from '../config'
 import createLogger from '../dependency/util/logger'
 
-let completed: any[] = []
-let failed: any[] = []
+
+
 
 interface Client {
   put: (tableName: string, data: any) => {}
 }
-export const generateMessage = ({ failed, passed, time }: { failed: number, passed: number, time: string }): string => {
-  const totalRecords: number = failed + passed
+export const generateMessage = ({ failed, passed, total, time }: { failed: number, passed: number, total: number, time: string }): string => {
+  const totalRecords: number = total
   return `---------------- SUMMARY --------------------\nExecution completed at ${time}\nTotal number of records processed: ${totalRecords}\nAccepted: ${passed}\nRejected: ${failed}\n\n\n--------------------------------------------------------`
 }
+
 const createPutDeviceToDynamo = ({ client, tableName }: { client: Client, tableName: string }) => async (data: any) => {
-  try {
-    await client.put(tableName, data)
-    completed.push(data)
+  let completed: any[] = []
+  let failed: any[] = []
+  const putIntoDynamo = async (record) => {
+    try {
+      await client.put(tableName, record)
+      completed.push(record)
+    }
+    catch (err) {
+      console.log(err)
+      failed.push(record)
+    }
   }
-  catch (err) {
-    console.log(err)
-    failed.push(data)
-  }
+  await mapAwait(data, data.length, putIntoDynamo)
+  return { completed: completed, failed, total:data.length}
 }
 
 export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: { getFromS3: (key: string) => any, createAWSStorageClient: Client, config: Config, createSendEmail: (params) => {} }) => async input => {
@@ -37,9 +44,11 @@ export default ({ getFromS3, createAWSStorageClient, createSendEmail, config }: 
     const storageClient: Client = createAWSStorageClient
     const date: string = new Date().toUTCString()
     const putDeviceToDynamo = createPutDeviceToDynamo({ client: storageClient, tableName: dynamoTableName })
-    await mapAwait(payload, payload.length, putDeviceToDynamo)
+    const results = await putDeviceToDynamo(payload)
+    console.log('completed', results.completed)
+    console.log('failed', results.failed)
     const params = {
-      Message: generateMessage({ failed: failed.length, passed: completed.length, time: date }),
+      Message: generateMessage({ failed: Number(results.failed.length), passed: Number(results.completed.length), total: Number(results.total), time: date }),
       Subject: "Devices upload successfully",
       TopicArn: topicArn
     }
